@@ -1,5 +1,5 @@
 #Notify
-A small JavaScript library for alerts and notifications. It includes simple notifications, prompt boxes, and confirm boxes. There are two themes, light and dark. You can find a demo [here](http://jsbin.com/xerumomalo/1/edit?html,output) (and using the dark theme [here](http://jsbin.com/xaqizevago/1/edit?html,output)).
+A small JavaScript library for alerts and notifications. It includes simple notifications, prompt boxes, and confirm boxes. There are two themes, light and dark. You can find a demo [here](http://jsbin.com/hututenobo/1/edit?html,output) (and using the dark theme [here](http://jsbin.com/varutijeve/1/edit?html,output)).
 ###Features
 
  - Small: only 2KB minified and gzipped
