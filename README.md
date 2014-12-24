@@ -21,7 +21,7 @@ Simply add `notify.js` or `notify.min.js` add the end of the `body` tag, and inc
     </html>
 
 ###Notify.notify(objectParam)
-Displays a plain notification with a title ([example](http://jsbin.com/tapoxicebo/1/edit?html,output))
+Displays a plain notification with a title ([example](http://jsbin.com/qapoduguko/1/edit?html,output))
 
  - objectParam: object literal
 
