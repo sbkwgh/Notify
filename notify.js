@@ -100,13 +100,13 @@
 		} if (noteObj.buttonOne) {
 			buttonOne = _el('input');
 			buttonOne.addEventListener('click', function() {
-				rootDiv.inputBox = inputBox.value;
+				if(inputBox) rootDiv.inputBox = inputBox.value;
 				this.parentElement.parentElement.parentElement.dispatchEvent(_events.buttonOne);
 			});
 		} if(noteObj.buttonTwo) {
 			buttonTwo = _el('input');
 			buttonTwo.addEventListener('click', function() {
-				rootDiv.inputBox = inputBox.value;
+				if(inputBox) rootDiv.inputBox = inputBox.value;
 				this.parentElement.parentElement.parentElement.dispatchEvent(_events.buttonTwo);
 			});
 		}
