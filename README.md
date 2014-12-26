@@ -5,6 +5,7 @@ A small JavaScript library for alerts and notifications. It includes simple noti
  - Small: only 2KB minified and gzipped
  - Simple to use API
  - Works with or without jQuery
+ - Supports IE 10+, Firefox 21+ and Chrome 23+
 
 ##Documentation
 
