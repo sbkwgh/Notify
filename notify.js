@@ -63,16 +63,36 @@
 		this.close();
 	};
 
-	var _events = {
-		close: new Event('close'),
-		timeElapsed: new Event('timeElapsed'),
-		buttonOne: new Event('buttonOne'),
-		buttonTwo: new Event('buttonTwo')
-	};
+	var _notifyArray = [];
+
+	var _notifyBar = _el('div');
+	_notifyBar.setAttribute('id', 'Notify_notify-bar');
+	document.body.appendChild(_notifyBar);
+	
+	var _events = {};
+	if(Event in window) {
+		_events = {
+			close: new Event('close'),
+			timeElapsed: new Event('timeElapsed'),
+			buttonOne: new Event('buttonOne'),
+			buttonTwo: new Event('buttonTwo')
+		};
+	} else {
+		_events = {
+			close: document.createEvent('Event'),
+			timeElapsed: document.createEvent('Event'),
+			buttonOne: document.createEvent('Event'),
+			buttonTwo: document.createEvent('Event')
+		};
+		_events.close.initEvent('close', true, true);
+		_events.timeElapsed.initEvent('timeElapsed', true, true);
+		_events.buttonOne.initEvent('buttonOne', true, true);
+		_events.buttonTwo.initEvent('buttonTwo', true, true);
+	}
 
 	var _removeElement = function(el) {
 		var currentNotify = el.parentElement.parentElement;
-		var index = Notify._notifyArray.indexOf(currentNotify);
+		var index = _notifyArray.indexOf(currentNotify);
 		
 		currentNotify.classList.add('Notify_fade-out');
 
@@ -80,7 +100,7 @@
 			currentNotify.parentElement.removeChild(currentNotify);
 		}, 500);
 
-		Notify._notifyArray.splice(index, 1);
+		_notifyArray.splice(index, 1);
 	};
 
 	var _createNote = function(noteObj) {
@@ -170,10 +190,10 @@
 				titleSection,
 				message
 			]],
-			[Notify.notifyBar, rootDiv]
+			[_notifyBar, rootDiv]
 		]);
 		
-		Notify._notifyArray.push(rootDiv);
+	_notifyArray.push(rootDiv);
 
 		rootDiv.classList.add('Notify_fade-in');
 
@@ -219,14 +239,9 @@
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
 	};
-
-	var notifyBar = _el('div');
-	notifyBar.setAttribute('id', 'Notify_notify-bar');
-	document.body.appendChild(notifyBar);
-	
 	setInterval(function() {
-		if(!Notify._notifyArray) return ;
-		Notify._notifyArray.forEach(function(item) {
+		if(_notifyArray) return ;
+		_notifyArray.forEach(function(item) {
 			var el = item.querySelector('.Notify_time-created');
 
 			var timeCreated = new Date(+el.getAttribute('data-time-created'));
@@ -279,10 +294,8 @@
 	}, 1000);
 	
 	window.Notify = {
-		notifyBar: document.getElementById('Notify_notify-bar'),
 		notify: notify,
 		prompt: prompt,
 		confirm: confirm,
-		_notifyArray: []
 	};
 })(window);
