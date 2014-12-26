@@ -1,5 +1,5 @@
 #Notify
-A small JavaScript library for alerts and notifications. It includes simple notifications, prompt boxes, and confirm boxes. There are two themes, light and dark. You can find a demo [here](http://jsbin.com/hututenobo/1/edit?html,output) (and using the dark theme [here](http://jsbin.com/varutijeve/1/edit?html,output)).
+A small JavaScript library for alerts and notifications. It includes simple notifications, prompt boxes, and confirm boxes. There are two themes, light and dark. You can find a demo [light theme demo](http://jsbin.com/riyisa/1/) (and using the dark theme [dark theme demo](http://jsbin.com/yemigo/1/)).
 ###Features
 
  - Small: only 2KB minified and gzipped
@@ -21,7 +21,7 @@ Simply add `notify.js` or `notify.min.js` add the end of the `body` tag, and inc
     </html>
 
 ###Notify.notify(objectParam)
-Displays a plain notification with a title ([example](http://jsbin.com/qapoduguko/1/edit?html,output))
+Displays a plain notification with a title ([notify](http://jsbin.com/pejika/1/))
 
  - objectParam: object literal
 
@@ -39,7 +39,7 @@ Usage:
  - The default setting for the title is no title
     
 ###Notify.prompt(objectParam)
-Displays a notification with an input box and two buttons ([example](http://jsbin.com/xolehadano/1/edit?html,output))
+Displays a notification with an input box and two buttons ([prompt](http://jsbin.com/kekami/1/))
 
  - objectParam: object literal
  
@@ -57,7 +57,7 @@ Usage:
    - If buttonOne or buttonTwo are left blank or not given, the button will no display
 
 ###Notify.confirm(objectParam)
-Displays a notification with two buttons ([example](http://jsbin.com/dupikahari/2/))
+Displays a notification with two buttons ([confirm](http://jsbin.com/gofere/1/))
 
  - objectParam: object literal
  
