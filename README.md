@@ -1,5 +1,5 @@
 #Notify
-A small JavaScript library for alerts and notifications. There are two themes, light and dark.
+A small JavaScript library for alerts and notifications. It includes simple notifications, prompt boxes, and confirm boxes. There are two themes, light and dark. You can find a demo [here](http://jsbin.com/hututenobo/1/edit?html,output) (and using the dark theme [here](http://jsbin.com/varutijeve/1/edit?html,output)).
 ###Features
 
  - Small: only 2KB minified and gzipped
@@ -21,25 +21,31 @@ Simply add `notify.js` or `notify.min.js` add the end of the `body` tag, and inc
     </html>
 
 ###Notify.notify(objectParam)
-Displays a plain notification with a title (example)
+Displays a plain notification with a title ([example](http://jsbin.com/qapoduguko/1/edit?html,output))
 
  - objectParam: object literal
+
+Usage:
 
     {
       message: 'Message for the notification',
       time: 3000,
       title: 'Title for the notification',
     }
-    - If time is 0, it will not close automatically
-The default setting for time is 2 minutes
-    - The default setting for the title is no title
+   
+
+ - If time is 0, it will not close automatically
+ - The default setting for time is 2 minutes
+ - The default setting for the title is no title
     
 ###Notify.prompt(objectParam)
-Displays a notification with an input box and two buttons
+Displays a notification with an input box and two buttons ([example](http://jsbin.com/xolehadano/1/edit?html,output))
 
  - objectParam: object literal
+ 
+Usage:
 
-    {
+     {
       message: 'Message for prompt box',
       time: 0,
       title: 'Title for prompt box',
@@ -51,9 +57,11 @@ Displays a notification with an input box and two buttons
    - If buttonOne or buttonTwo are left blank or not given, the button will no display
 
 ###Notify.confirm(objectParam)
-Displays a notification with two buttons
+Displays a notification with two buttons ([example](http://jsbin.com/dupikahari/2/))
 
  - objectParam: object literal
+ 
+Usage: 
 
     {
       message: 'Message for prompt box',
@@ -72,6 +80,8 @@ All the above methods (`notify`, `prompt`, and `confirm`) return the notify elem
  - eventName: string
  - callback: function
 
+Usage:
+
     NotifyElement.on('close', cb) //When the users closes the notification
     NotifyElement.on('timeElapsed', cb) //When the time has elapsed
     NotifyElement.on('buttonOne', cb) //When button one is clicked
@@ -81,3 +91,5 @@ All the above methods (`notify`, `prompt`, and `confirm`) return the notify elem
    - If no event is handled for buttonOne or buttonTwo, the default behavior is closing the notification box
    - The input box value can be accessed through `this.inputBox`
    - To close the notification, call `this.close()`
+
+    
