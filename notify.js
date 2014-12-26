@@ -78,6 +78,7 @@
 			buttonTwo: new Event('buttonTwo')
 		};
 	} else {
+		//Events for internet explorer which don't support new Event()
 		_events = {
 			close: document.createEvent('Event'),
 			timeElapsed: document.createEvent('Event'),
@@ -239,8 +240,9 @@
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
 	};
+
 	setInterval(function() {
-		if(_notifyArray) return ;
+		if(!_notifyArray) return ;
 		_notifyArray.forEach(function(item) {
 			var el = item.querySelector('.Notify_time-created');
 
