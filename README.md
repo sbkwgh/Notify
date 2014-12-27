@@ -23,7 +23,7 @@ Simply add `notify.js` or `notify.min.js` add the end of the `body` tag, and inc
 
 ###Notify.notify(objectParam)
 Displays a plain notification with a title ([notify](http://jsbin.com/pejika/1/))
-
+)
  - objectParam: object literal
 
 Usage:
@@ -32,12 +32,15 @@ Usage:
       message: 'Message for the notification',
       time: 3000,
       title: 'Title for the notification',
+      location: 'top-right'
     }
    
 
  - If time is 0, it will not close automatically
  - The default setting for time is 2 minutes
  - The default setting for the title is no title
+ - The default location is top-right, other options:
+![Location options](http://i.imgur.com/zXf8tqM.png)
     
 ###Notify.prompt(objectParam)
 Displays a notification with an input box and two buttons ([prompt](http://jsbin.com/kekami/1/))
@@ -51,7 +54,8 @@ Usage:
       time: 0,
       title: 'Title for prompt box',
       buttonOne: 'Value for button one',
-      buttonTwo: 'Value for button two'
+      buttonTwo: 'Value for button two',
+      location: 'top-right'
     }
     
 
@@ -69,7 +73,8 @@ Usage:
       time: 0,
       title: 'Title for prompt box',
       buttonOne: 'Value for button one',
-      buttonTwo: 'Value for button two'
+      buttonTwo: 'Value for button two',
+      location: 'top-right'
     }
     
 
