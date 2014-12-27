@@ -1,3 +1,9 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
 @keyframes fadeIn {
     from { 
     	opacity: 0;
@@ -19,15 +25,67 @@
     }
 }
 
-#Notify_notify-bar {
+#Notify_notify-bar-top-left {
 	position: fixed;
 	overflow: auto;
-	height: 100%;
+	left: 1em;
+	width: 15em;
+	top: 0;
+	padding-top: 1em;
+}
+#Notify_notify-bar-top-right {
+	position: fixed;
+	overflow: auto;
 	right: 1em;
 	width: 15em;
 	top: 0;
 	padding-top: 1em;
-	z-index: 100;
+}
+#Notify_notify-bar-bottom-right {
+	position: fixed;
+	overflow: auto;
+	right: 1em;
+	width: 15em;
+	bottom: 0;
+	padding-bottom: 1em;
+}
+#Notify_notify-bar-bottom-left {
+	position: fixed;
+	overflow: auto;
+	left: 1em;
+	width: 15em;
+	bottom: 0;
+	padding-bottom: 1em;
+}
+.Notify_sub-div {
+	display: table-cell;
+	vertical-align: middle;
+}
+#Notify_center-div {
+    width:100%;
+    height : 100%;	
+    display:table;
+}
+
+.Notify.Notify_middle-center {
+	display:table-cell;
+}
+
+.Notify.Notify_center-top {
+	position: absolute;
+	z-index: 2000;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 2em auto;
+}
+.Notify.Notify_center-bottom {
+	position: absolute;
+	z-index: 2000;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 2em auto;
 }
 
 .Notify {
@@ -41,6 +99,7 @@
 	font-size: .75em;
 	width: 17.5em;
 	margin-bottom: .5em;
+	z-index: 100;
 	transition: background-color 0.3s;
 }
 .Notify:hover {
@@ -108,4 +167,20 @@
 .Notify input[type='button']:active {
 	box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
 	background-color: #E5E5E5;
+}
+
+#Notify_notify-bar-shadow {
+	position: fixed;
+	overflow: auto;
+	height: 100%;
+	right: 1em;
+	width: 15em;
+	top: 0;
+	padding-top: 1em;
+	z-index: 100;
+	background-color: #000;
+	opacity: 0;
+}
+.dark {
+	opacity: 0.5;
 }

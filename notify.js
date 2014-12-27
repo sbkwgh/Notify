@@ -65,9 +65,27 @@
 
 	var _notifyArray = [];
 
-	var _notifyBar = _el('div');
-	_notifyBar.setAttribute('id', 'Notify_notify-bar');
-	document.body.appendChild(_notifyBar);
+	var _notifyBarTopLeft = _el('div'),
+		_notifyBarBottomLeft = _el('div'),
+		_notifyBarTopRight = _el('div'),
+		_notifyBarBottomRight = _el('div');
+
+	_set({
+		'id': [
+			[_notifyBarTopLeft, 'Notify_notify-bar-top-left'],
+			[_notifyBarTopRight, 'Notify_notify-bar-top-right'],
+			[_notifyBarBottomLeft, 'Notify_notify-bar-bottom-left'],
+			[_notifyBarBottomRight, 'Notify_notify-bar-bottom-right']
+		]
+	});
+	_append([
+		[document.body, [
+			_notifyBarTopLeft,
+			_notifyBarTopRight,
+			_notifyBarBottomLeft,
+			_notifyBarBottomRight
+		]]
+	])
 	
 	var _events = {};
 	if(Event in window) {
@@ -104,8 +122,13 @@
 		_notifyArray.splice(index, 1);
 	};
 
+	var centerDiv = _el('div');
+	centerDiv.setAttribute('id', 'Notify_center-div');
+	document.body.appendChild(centerDiv);
+
 	var _createNote = function(noteObj) {
 		var rootDiv = _el('div'),
+			subDiv = _el('div'),
 				titleSection = _el('div'),
 					close = _el('span'),
 					title = _el('span'),
@@ -158,7 +181,7 @@
 			],
 			'data-milliseconds-to-delete': [
 				timeCreated,
-				noteObj.millisecondsToDelete || 120000
+				(noteObj.millisecondsToDelete === undefined ? 120000 : (noteObj.millisecondsToDelete ? noteObj.millisecondsToDelete : 0))
 			],
 			'type': [
 				[inputBox, 'text'],
@@ -190,13 +213,44 @@
 			[rootDiv, [
 				titleSection,
 				message
-			]],
-			[_notifyBar, rootDiv]
+			]]
 		]);
 		
-	_notifyArray.push(rootDiv);
+		_notifyArray.push(rootDiv);
 
 		rootDiv.classList.add('Notify_fade-in');
+
+		switch(noteObj.location) {
+			case 'middle-center':
+				rootDiv.classList.add('Notify_middle-center');
+				subDiv.style.paddingLeft = "calc(50% - 7em)"
+				subDiv.setAttribute('class', 'Notify_sub-div')
+				subDiv.appendChild(rootDiv);
+				centerDiv.appendChild(subDiv)
+				break;
+			case 'top-left':
+				_notifyBarTopLeft.appendChild(rootDiv);
+				break;
+			case 'top-center':
+				rootDiv.classList.add('Notify_center-top');
+				document.body.appendChild(rootDiv);
+				break;
+			case 'bottom-center':
+				rootDiv.classList.add('Notify_center-bottom');
+				document.body.appendChild(rootDiv);
+				break;
+			case 'bottom-left':
+				_notifyBarBottomLeft.appendChild(rootDiv);
+				break;
+			case 'top-right':
+				_notifyBarTopRight.appendChild(rootDiv);
+				break;
+			case 'bottom-right':
+				_notifyBarBottomRight.appendChild(rootDiv);
+				break;
+			default:
+				_notifyBarTopRight.appendChild(rootDiv);
+		}
 
 		rootDiv.on = function(event, func) {
 			this.removeEventListener(event, _defaultClose);
@@ -214,7 +268,8 @@
 		return _createNote({
 			title: obj.title || '',
 			message: obj.message,
-			millisecondsToDelete: obj.time
+			millisecondsToDelete: obj.time,
+			location: obj.location
 		});
 	};
 
@@ -225,7 +280,8 @@
 			millisecondsToDelete: obj.time,
 			inputBox: true,
 			buttonOne: obj.buttonOne || '',	
-			buttonTwo: obj.buttonTwo || ''
+			buttonTwo: obj.buttonTwo || '',
+			location: obj.location
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
 	};
@@ -236,7 +292,8 @@
 			message: obj.message,
 			millisecondsToDelete: obj.time,
 			buttonOne: obj.buttonOne || '',
-			buttonTwo: obj.buttonTwo || ''
+			buttonTwo: obj.buttonTwo || '',
+			location: obj.location
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
 	};
@@ -285,8 +342,7 @@
 			}
 			
 			el.innerHTML = timePhrase;
-
-			if(millisecondsToDelete && millisecondsElapsed > millisecondsToDelete) {
+			if(+millisecondsToDelete && millisecondsElapsed > millisecondsToDelete) {
 				item.dispatchEvent(_events.timeElapsed);
 				_removeElement(el);
 			}

@@ -1,3 +1,9 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
 @keyframes fadeIn {
 	from { 
 		opacity: 0;
@@ -11,27 +17,79 @@
 @keyframes fadeOut {
 	from {
 		opacity: 1;
-		height: auto;
 	}
 	to   {
 		opacity: 0; 
-		height: 0px;
 	}
 }
 
-#Notify_notify-bar {
+#Notify_notify-bar-top-left {
 	position: fixed;
 	overflow: auto;
-	height: 100%;
+	left: 1em;
+	width: 15em;
+	top: 0;
+	padding-top: 1em;
+}
+#Notify_notify-bar-top-right {
+	position: fixed;
+	overflow: auto;
 	right: 1em;
 	width: 15em;
 	top: 0;
 	padding-top: 1em;
-	z-index: 100;
 }
+#Notify_notify-bar-bottom-right {
+	position: fixed;
+	overflow: auto;
+	right: 1em;
+	width: 15em;
+	bottom: 0;
+	padding-bottom: 1em;
+}
+#Notify_notify-bar-bottom-left {
+	position: fixed;
+	overflow: auto;
+	left: 1em;
+	width: 15em;
+	bottom: 0;
+	padding-bottom: 1em;
+}
+.Notify_sub-div {
+	display: table-cell;
+	vertical-align: middle;
+}
+#Notify_center-div {
+    width:100%;
+    height : 100%;	
+    display:table;
+}
+
+.Notify.Notify_middle-center {
+	display:table-cell;
+}
+
+.Notify.Notify_center-top {
+	position: absolute;
+	z-index: 2000;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 2em auto;
+}
+.Notify.Notify_center-bottom {
+	position: absolute;
+	z-index: 2000;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 2em auto;
+}
+
 
 .Notify {
 	color: #000;
+	z-index: 2000;
 	border: 2px solid #E5E5E5;
 	padding: .5em;
 	border-radius: .3em;
@@ -43,11 +101,12 @@
 	margin-bottom: .5em;
 	transition: background-color 0.3s;
 }
+
+
 .Notify_fade-in {
 	animation: fadeIn 0.8s;
 }
 .Notify_fade-out {
-	opacity: 0;
 	animation: fadeOut 0.5s;
 }
 
@@ -74,6 +133,7 @@
 }
 .Notify_message {
 	margin: 0.5em 0;
+	word-wrap: break-word;
 }
 
 .Notify input[type='text'] {
