@@ -1,92 +1,34 @@
 (function(window, undefined) {
 	'use strict';
-
-	/*Shortcut functions*/
-	//Shortcut for document.createElement
-	var _el = function(tagName) {
-	return document.createElement(tagName);
-	};
-	//Shortcut for document.createTextNode
-	var _txt = function(text) {
-	return document.createTextNode(text);
-	};
-	//Shortcut for el.setAttribute
-	//Pass in an object with keys of the attribute
-	//containing an array of the element and the value
-	var _set = function(setObj) {
-		for(var attribute in setObj) {
-			if(setObj.hasOwnProperty(attribute)) {
-				//If there is only one item, you don't need to 
-				//Put it into an array
-				if(!Array.isArray(setObj[attribute][0])) {
-					var el = setObj[attribute][0];
-					var value = setObj[attribute][1];
-
-					el.setAttribute(attribute, value);
-					continue;
-				}
-
-				setObj[attribute].forEach(function(item) {
-					var el = item[0];
-					var value = item[1];
-
-					if(typeof el === 'undefined') return ;	
-
-					el.setAttribute(attribute, value);
-				});
-			}
-		}
-	};
-	//Shortcut for el.appendChild
-	//Pass in an array of arrays, with the first item as the parent
-	//and the second item as the child to append
-	var _append = function(appendArray) {
-		appendArray.forEach(function(item) {
-			var parent = item[0];
-			var children = item[1];
-
-			//If there is only one item, you don't need to 
-			//Put it into an array
-			if(!Array.isArray(children)) {
-				parent.appendChild(children);
-				return ;
-			}
-
-			children.forEach(function(child) {
-				if(typeof child === 'undefined') return ;
-				parent.appendChild(child);
-			});
-		});
-	};
-
-	var _defaultClose = function() {
-		this.close();
-	};
-
+	
+	/*'Global' el*/
+	//The array containing all the notify objects
 	var _notifyArray = [];
 
+	//The notify bars
 	var _notifyBarTopLeft = _el('div'),
 		_notifyBarBottomLeft = _el('div'),
 		_notifyBarTopRight = _el('div'),
 		_notifyBarBottomRight = _el('div');
 
-	_set({
-		'id': [
-			[_notifyBarTopLeft, 'Notify_notify-bar-top-left'],
-			[_notifyBarTopRight, 'Notify_notify-bar-top-right'],
-			[_notifyBarBottomLeft, 'Notify_notify-bar-bottom-left'],
-			[_notifyBarBottomRight, 'Notify_notify-bar-bottom-right']
-		]
-	});
-	_append([
-		[document.body, [
-			_notifyBarTopLeft,
-			_notifyBarTopRight,
-			_notifyBarBottomLeft,
-			_notifyBarBottomRight
-		]]
-	])
+	_set(_notifyBarTopLeft, {id: 'Notify_notify-bar-top-left'});
+	_set(_notifyBarTopRight, {id: 'Notify_notify-bar-top-right'});
+	_set(_notifyBarBottomLeft, {id: 'Notify_notify-bar-bottom-left'});
+	_set(_notifyBarBottomRight, {id: 'Notify_notify-bar-bottom-right'});
+
+	_append(document.body, [
+		_notifyBarTopLeft,
+		_notifyBarTopRight,
+		_notifyBarBottomLeft,
+		_notifyBarBottomRight
+	]);
+	//This is the div which contains the middle-center notify
+	//(the one in the "center center" of the screen)
+	var centerDiv = _el('div');
+	_set(centerDiv, {id: 'Notify_center-div'});
+	_append(document.body, [centerDiv]);
 	
+	//Create custom events
 	var _events = {};
 	if(Event in window) {
 		_events = {
@@ -109,26 +51,70 @@
 		_events.buttonTwo.initEvent('buttonTwo', true, true);
 	}
 
-	var _removeElement = function(el) {
-		var currentNotify = el.parentElement.parentElement;
+	/*Shortcut functions*/
+	//Shortcut for document.createElement function
+	function _el(tagName) {
+	return document.createElement(tagName);
+	};
+	//Shortcut for el.setAttribute
+	//Pass in the element and an object:
+	//keys => attribute, value => attribute value
+	function _set(el, setObj) {
+		for(var attribute in setObj) {
+			if(setObj.hasOwnProperty(attribute)) {
+				el.setAttribute(attribute, setObj[attribute])
+			}
+		}
+	};
+	//Shortcut for el.appendChild
+	//Pass in the parent element and an array of children
+	function _append(parent, appendArray) {
+		appendArray.forEach(function(child) {
+			if(typeof child === 'undefined') return ;
+			parent.appendChild(child);
+		});
+	};
+
+	/*Other 'global' functions*/
+	//Function called if no cb for the button is added
+	//Simply closes the notifcation/alert
+	function _defaultClose() {
+		this.close();
+	};
+
+	//Remove notify from dom and form _notifyArray
+	function _removeElement(currentNotify) {
+		//var currentNotify = el.parentElement.parentElement;
 		var index = _notifyArray.indexOf(currentNotify);
-		
+		//Fade out the notification
 		currentNotify.classList.add('Notify_fade-out');
 
 		setTimeout(function() {
 			currentNotify.parentElement.removeChild(currentNotify);
 		}, 500);
 
+		//Remove the element from the array
 		_notifyArray.splice(index, 1);
 	};
 
-	var centerDiv = _el('div');
-	centerDiv.setAttribute('id', 'Notify_center-div');
-	document.body.appendChild(centerDiv);
+	//Actually creates the notify, returns the notify element
+	function _createNote(noteObj) {
 
-	var _createNote = function(noteObj) {
-		var rootDiv = _el('div'),
-			subDiv = _el('div'),
+		//Adds an event listener to the buttons
+		var _notifyButton = function(buttonEl, buttonElName) {
+			var currentNotify = buttonEl.parentElement.parentElement.parentElement;
+
+			buttonEl = _el('input');
+			buttonEl.addEventListener('click', function() {
+				if(inputBox) rootDiv.inputBox = inputBox.value;
+				buttonEl.dispatchEvent(_events[buttonElName]);
+			});
+
+		}
+
+		//Create elements needed for the notify
+		var subDiv = _el('div'),
+			rootDiv = _el('div'),
 				titleSection = _el('div'),
 					close = _el('span'),
 					title = _el('span'),
@@ -139,117 +125,89 @@
 						buttonOne,
 						buttonTwo;
 
+		title.innerHTML = noteObj.title + ' ';
+		timeCreated.innerHTML = 'Just now';
+		message.innerHTML = noteObj.message;
+		close.innerHTML = '&times;';
+		close.addEventListener('click', function() {
+			var currentNotify = this.parentElement.parentElement;
+			currentNotify.dispatchEvent(_events.close);
+			_removeElement(currentNotify);
+		});
+			
+		//Set element attributes
+		_set(rootDiv, {class: 'Notify'});
+		rootDiv.classList.add('Notify_fade-in');
+			_set(titleSection, {class: 'Notify_title-section'});
+				_set(close, {class: 'Notify_close'});
+				_set(title, {class: 'Notify_title'});
+				_set(timeCreated, {
+					class: 'Notify_time-created',
+					'data-time-created': Date.now(),
+					'data-milliseconds-to-delete': (noteObj.millisecondsToDelete === undefined ? 120000 : (noteObj.millisecondsToDelete ? noteObj.millisecondsToDelete : 0))
+				});
+			_set(message, {class: 'Notify_message'});
+				_set(centerButtons, {class: 'Notify_center-buttons'});
+
+		//Append different elements into one another
+		_append(rootDiv, [titleSection, message])
+			_append(titleSection, [close, title, timeCreated]);
+			_append(message, [inputBox, centerButtons]);
+				_append(centerButtons, [buttonOne, buttonTwo]);
+
+
+		//Creates the elements if they are included as
+		//a noteObj parameter
 		if(noteObj.inputBox) {
 			inputBox = _el('input');
+			_set('inputBox', {type: 'text'});
 		} if (noteObj.buttonOne) {
-			buttonOne = _el('input');
-			buttonOne.addEventListener('click', function() {
-				if(inputBox) rootDiv.inputBox = inputBox.value;
-				this.parentElement.parentElement.parentElement.dispatchEvent(_events.buttonOne);
+			_notifyButton(buttonOne, 'buttonOne');
+			_set('buttonOne', {
+				type: 'button',
+				value: noteObj.buttonOne || 'OK'
 			});
 		} if(noteObj.buttonTwo) {
-			buttonTwo = _el('input');
-			buttonTwo.addEventListener('click', function() {
-				if(inputBox) rootDiv.inputBox = inputBox.value;
-				this.parentElement.parentElement.parentElement.dispatchEvent(_events.buttonTwo);
+			_notifyButton(buttonTwo, 'buttonTwo');
+			_set('buttonTwo', {
+				type: 'button',
+				value: noteObj.buttonTwo || 'Cancel'
 			});
 		}
 		
-		var titleTxt = _txt(noteObj.title + ' '),
-			messageTxt = _txt(noteObj.message);
-			close.innerHTML = '&times;';
-			timeCreated.innerHTML = 'Just now';
-
-		close.addEventListener('click', function() {
-			this.parentElement.parentElement.dispatchEvent(_events.close);
-			_removeElement(this);
-		});
-
-		_set({
-			'class': [
-				[rootDiv, 'Notify'],
-				[titleSection, 'Notify_title-section'],
-				[close, 'Notify_close'],
-				[title, 'Notify_title'],
-				[timeCreated, 'Notify_time-created'],
-				[message, 'Notify_message'],
-				[centerButtons, 'Notify_center-buttons']
-			],
-			'data-time-created': [
-				timeCreated,
-				Date.now()
-			],
-			'data-milliseconds-to-delete': [
-				timeCreated,
-				(noteObj.millisecondsToDelete === undefined ? 120000 : (noteObj.millisecondsToDelete ? noteObj.millisecondsToDelete : 0))
-			],
-			'type': [
-				[inputBox, 'text'],
-				[buttonOne, 'button'],
-				[buttonTwo, 'button']
-			],
-			'value': [
-				[buttonOne, noteObj.buttonOne || 'OK'],
-				[buttonTwo, noteObj.buttonTwo || 'Cancel']
-			]
-		});
-
-		_append([
-			[title, titleTxt],
-			[message, [
-				messageTxt,
-				inputBox,
-				centerButtons
-			]],
-			[centerButtons, [
-				buttonOne,
-				buttonTwo
-			]],
-			[titleSection, [
-				close,
-				title,
-				timeCreated
-			]],
-			[rootDiv, [
-				titleSection,
-				message
-			]]
-		]);
-		
 		_notifyArray.push(rootDiv);
 
-		rootDiv.classList.add('Notify_fade-in');
-
+		//Set and do various stuff to align the notifies on the page
 		switch(noteObj.location) {
 			case 'middle-center':
 				rootDiv.classList.add('Notify_middle-center');
 				subDiv.style.paddingLeft = "calc(50% - 7em)"
-				subDiv.setAttribute('class', 'Notify_sub-div')
-				subDiv.appendChild(rootDiv);
-				centerDiv.appendChild(subDiv)
+				_set(subDiv, {class: 'Notify_sub-div'});
+				_append(centerDiv, [subDiv]);
+					_append(subDiv, [rootDiv]);
 				break;
 			case 'top-left':
-				_notifyBarTopLeft.appendChild(rootDiv);
+				_append(_notifyBarTopLeft, [rootDiv]);
 				break;
 			case 'top-center':
 				rootDiv.classList.add('Notify_center-top');
-				document.body.appendChild(rootDiv);
+				_append(document.body, [rootDiv]);
 				break;
 			case 'bottom-center':
 				rootDiv.classList.add('Notify_center-bottom');
-				document.body.appendChild(rootDiv);
+				_append(document.body, [rootDiv]);
 				break;
 			case 'bottom-left':
-				_notifyBarBottomLeft.appendChild(rootDiv);
+				_append(_notifyBarBottomLeft, [rootDiv]);
 				break;
 			case 'top-right':
-				_notifyBarTopRight.appendChild(rootDiv);
+				_append(_notifyBarTopRight, [rootDiv]);
 				break;
 			case 'bottom-right':
-				_notifyBarBottomRight.appendChild(rootDiv);
+				_append(_notifyBarBottomRight, [rootDiv]);
 				break;
 			default:
-				_notifyBarTopRight.appendChild(rootDiv);
+				_append(_notifyBarTopRight, [rootDiv]);
 		}
 
 		rootDiv.on = function(event, func) {
@@ -264,6 +222,8 @@
 		return rootDiv;
 	};
 
+	/*'Public' functions (the ones added to the Notify object)*/
+	//A plain notification
 	var notify = function(obj) {
 		return _createNote({
 			title: obj.title || '',
@@ -272,7 +232,7 @@
 			location: obj.location
 		});
 	};
-
+	//Notification with buttons and input box
 	var prompt = function(obj) {
 		return _createNote({
 			title: obj.title || '',
@@ -285,7 +245,7 @@
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
 	};
-
+	//Notification with buttons
 	var confirm = function(obj) {
 		return _createNote({
 			title: obj.title || '',

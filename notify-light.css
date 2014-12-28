@@ -108,6 +108,7 @@ html, body {
 }
 .Notify_fade-out {
 	animation: fadeOut 0.5s;
+	opacity: 0;
 }
 
 .Notify:first-child {
