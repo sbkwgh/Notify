@@ -10,20 +10,20 @@ A small JavaScript library for alerts and notifications. It includes simple noti
 ##Documentation
 
 ###Installation
-Simply add `notify.js` or `notify.min.js` add the end of the `body` tag, and include the CSS	(`notify.css` or `notify_dark.css`) in the `head` tag:
+Simply include the JavaScript file at the end of the `body` tag, and include the CSS	in the `head` tag:
 
     ...
     <head>
-    <link rel="stylesheet" type="text/css" href="notify.css" />
+    <link rel="stylesheet" type="text/css" href="notify-light.min.css" />
     </head>
     ...
-    <script type="text/javascript" src="notify.js"></script>
+    <script type="text/javascript" src="notify.min.js"></script>
     </body>
     </html>
 
 ###Notify.notify(objectParam)
-Displays a plain notification with a title ([notify](http://jsbin.com/pejika/1/))
-)
+Displays a plain notification with a title ([notify example](http://jsbin.com/pejika/1/))
+
  - objectParam: object literal
 
 Usage:
@@ -40,10 +40,10 @@ Usage:
  - The default setting for time is 2 minutes
  - The default setting for the title is no title
  - The default location is top-right, other options:
-![Location options](http://i.imgur.com/zXf8tqM.png)
+![Location options](http://i.imgur.com/Ak6XFRK.png)
     
 ###Notify.prompt(objectParam)
-Displays a notification with an input box and two buttons ([prompt](http://jsbin.com/kekami/1/))
+Displays a notification with an input box and two buttons ([prompt example](http://jsbin.com/kekami/1/))
 
  - objectParam: object literal
  
@@ -62,7 +62,7 @@ Usage:
    - If buttonOne or buttonTwo are left blank or not given, the button will no display
 
 ###Notify.confirm(objectParam)
-Displays a notification with two buttons ([confirm](http://jsbin.com/gofere/1/))
+Displays a notification with two buttons ([confirm example](http://jsbin.com/gofere/1/))
 
  - objectParam: object literal
  
