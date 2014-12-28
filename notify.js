@@ -54,18 +54,19 @@
 	/*Shortcut functions*/
 	//Shortcut for document.createElement function
 	function _el(tagName) {
-	return document.createElement(tagName);
-	};
+		return document.createElement(tagName);
+	}
 	//Shortcut for el.setAttribute
 	//Pass in the element and an object:
 	//keys => attribute, value => attribute value
 	function _set(el, setObj) {
+		if(typeof el === 'undefined') return ;
 		for(var attribute in setObj) {
 			if(setObj.hasOwnProperty(attribute)) {
-				el.setAttribute(attribute, setObj[attribute])
+				el.setAttribute(attribute, setObj[attribute]);
 			}
 		}
-	};
+	}
 	//Shortcut for el.appendChild
 	//Pass in the parent element and an array of children
 	function _append(parent, appendArray) {
@@ -73,14 +74,14 @@
 			if(typeof child === 'undefined') return ;
 			parent.appendChild(child);
 		});
-	};
+	}
 
 	/*Other 'global' functions*/
 	//Function called if no cb for the button is added
 	//Simply closes the notifcation/alert
 	function _defaultClose() {
-		this.close();
-	};
+		_removeElement(this);
+	}
 
 	//Remove notify from dom and form _notifyArray
 	function _removeElement(currentNotify) {
@@ -91,33 +92,20 @@
 
 		//Wait for div to fadeOut, then remove
 		setTimeout(function() {
+			//Also remove subDiv parent div (if it exists)
+			if(currentNotify.parentElement.getAttribute('class') === 'Notify_sub-div') {
+				var centerDiv = document.getElementById('Notify_center-div');
+				centerDiv.removeChild(currentNotify.parentElement);
+			}
 			currentNotify.parentElement.removeChild(currentNotify);
 		}, 500);
 
-		//Also remove subDiv parent div (if it exists)
-		if(currentNotify.parentElement.getAttribute('class') === 'Notify_sub-div') {
-			var centerDiv = document.getElementById('Notify_center-div');
-			centerDiv.removeChild(currentNotify.parentElement);
-		}
-
 		//Remove the element from the array
 		_notifyArray.splice(index, 1);
-	};
+	}
 
 	//Actually creates the notify, returns the notify element
 	function _createNote(noteObj) {
-
-		//Adds an event listener to the buttons
-		var _notifyButton = function(buttonEl, buttonElName) {
-			var currentNotify = buttonEl.parentElement.parentElement.parentElement;
-
-			buttonEl = _el('input');
-			buttonEl.addEventListener('click', function() {
-				if(inputBox) rootDiv.inputBox = inputBox.value;
-				buttonEl.dispatchEvent(_events[buttonElName]);
-			});
-
-		}
 
 		//Milliseconds to delete
 		var millisecondsToDelete;
@@ -151,7 +139,26 @@
 			currentNotify.dispatchEvent(_events.close);
 			_removeElement(currentNotify);
 		});
-			
+
+		//Creates the elements if they are included as
+		//a noteObj parameter
+		if(noteObj.inputBox) {
+			inputBox = _el('input');
+			_set(inputBox, {type: 'text'});
+		} if (noteObj.buttonOne) {
+			buttonOne = _el('input');
+			buttonOne.addEventListener('click', function() {
+				if(inputBox) rootDiv.inputBox = inputBox.value;
+				buttonOne.dispatchEvent(_events.buttonOne);
+			});
+		} if(noteObj.buttonTwo) {
+			buttonTwo = _el('input');
+			buttonTwo.addEventListener('click', function() {
+				if(inputBox) rootDiv.inputBox = inputBox.value;
+				buttonTwo.dispatchEvent(_events.buttonTwo);
+			});
+		}
+
 		//Set element attributes
 		_set(rootDiv, {class: 'Notify'});
 		rootDiv.classList.add('Notify_fade-in');
@@ -165,40 +172,28 @@
 				});
 			_set(message, {class: 'Notify_message'});
 				_set(centerButtons, {class: 'Notify_center-buttons'});
+					_set(buttonOne, {
+						type: 'button',
+						value: noteObj.buttonOne
+					});
+					_set(buttonTwo, {
+						type: 'button',
+						value: noteObj.buttonTwo
+					});
 
 		//Append different elements into one another
-		_append(rootDiv, [titleSection, message])
+		_append(rootDiv, [titleSection, message]);
 			_append(titleSection, [close, title, timeCreated]);
 			_append(message, [inputBox, centerButtons]);
-				_append(centerButtons, [buttonOne, buttonTwo]);
+			_append(centerButtons, [buttonOne, buttonTwo]);
 
-
-		//Creates the elements if they are included as
-		//a noteObj parameter
-		if(noteObj.inputBox) {
-			inputBox = _el('input');
-			_set('inputBox', {type: 'text'});
-		} if (noteObj.buttonOne) {
-			_notifyButton(buttonOne, 'buttonOne');
-			_set('buttonOne', {
-				type: 'button',
-				value: noteObj.buttonOne || 'OK'
-			});
-		} if(noteObj.buttonTwo) {
-			_notifyButton(buttonTwo, 'buttonTwo');
-			_set('buttonTwo', {
-				type: 'button',
-				value: noteObj.buttonTwo || 'Cancel'
-			});
-		}
-		
 		_notifyArray.push(rootDiv);
 
 		//Set and do various stuff to align the notifies on the page
 		switch(noteObj.location) {
 			case 'middle-center':
 				rootDiv.classList.add('Notify_middle-center');
-				subDiv.style.paddingLeft = "calc(50% - 7em)"
+				subDiv.style.paddingLeft = "calc(50% - 7em)";
 				_set(subDiv, {class: 'Notify_sub-div'});
 				_append(centerDiv, [subDiv]);
 					_append(subDiv, [rootDiv]);
@@ -233,24 +228,24 @@
 			return this;
 		};
 		rootDiv.close = function() {
-			_removeElement(close);
+			_removeElement(this);
 		};
 
 		return rootDiv;
-	};
+	}
 
 	/*'Public' functions (the ones added to the Notify object)*/
 	//A plain notification
-	var notify = function(obj) {
+	function notify(obj) {
 		return _createNote({
 			title: obj.title || '',
 			message: obj.message,
 			millisecondsToDelete: obj.time,
 			location: obj.location
 		});
-	};
+	}
 	//Notification with buttons and input box
-	var prompt = function(obj) {
+	function prompt(obj) {
 		return _createNote({
 			title: obj.title || '',
 			message: obj.message,
@@ -261,9 +256,9 @@
 			location: obj.location
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
-	};
+	}
 	//Notification with buttons
-	var confirm = function(obj) {
+	function confirm(obj) {
 		return _createNote({
 			title: obj.title || '',
 			message: obj.message,
@@ -273,7 +268,7 @@
 			location: obj.location
 		}).on('buttonTwo', _defaultClose)
 		  .on('buttonOne', _defaultClose);
-	};
+	}
 
 	setInterval(function() {
 		if(!_notifyArray) return ;
@@ -321,7 +316,7 @@
 			el.innerHTML = timePhrase;
 			if(+millisecondsToDelete && millisecondsElapsed > millisecondsToDelete) {
 				item.dispatchEvent(_events.timeElapsed);
-				_removeElement(el);
+				_removeElement(item);
 			}
 			
 			
