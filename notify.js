@@ -89,10 +89,17 @@
 		//Fade out the notification
 		currentNotify.classList.add('Notify_fade-out');
 
+		//Wait for div to fadeOut, then remove
 		setTimeout(function() {
 			currentNotify.parentElement.removeChild(currentNotify);
 		}, 500);
 
+		//Also remove subDiv parent div (if it exists)
+		if(currentNotify.parentElement.getAttribute('class') === 'Notify_sub-div') {
+			var centerDiv = document.getElementById('Notify_center-div');
+			centerDiv.removeChild(currentNotify.parentElement);
+		}
+		
 		//Remove the element from the array
 		_notifyArray.splice(index, 1);
 	};
