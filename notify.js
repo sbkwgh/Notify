@@ -191,9 +191,8 @@
 
 		//Set and do various stuff to align the notifies on the page
 		switch(noteObj.location) {
+			case 'center':
 			case 'middle-center':
-				rootDiv.classList.add('Notify_middle-center');
-				subDiv.style.paddingLeft = "calc(50% - 7em)";
 				_set(subDiv, {class: 'Notify_sub-div'});
 				_append(centerDiv, [subDiv]);
 					_append(subDiv, [rootDiv]);
