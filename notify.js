@@ -99,7 +99,7 @@
 			var centerDiv = document.getElementById('Notify_center-div');
 			centerDiv.removeChild(currentNotify.parentElement);
 		}
-		
+
 		//Remove the element from the array
 		_notifyArray.splice(index, 1);
 	};
@@ -117,6 +117,16 @@
 				buttonEl.dispatchEvent(_events[buttonElName]);
 			});
 
+		}
+
+		//Milliseconds to delete
+		var millisecondsToDelete;
+		if(noteObj.millisecondsToDelete === undefined) {
+			millisecondsToDelete = 120000;
+		} else if(noteObj.millisecondsToDelete === 0) {
+			millisecondsToDelete = 0;
+		} else {
+			millisecondsToDelete = noteObj.millisecondsToDelete;
 		}
 
 		//Create elements needed for the notify
@@ -151,7 +161,7 @@
 				_set(timeCreated, {
 					class: 'Notify_time-created',
 					'data-time-created': Date.now(),
-					'data-milliseconds-to-delete': (noteObj.millisecondsToDelete === undefined ? 120000 : (noteObj.millisecondsToDelete ? noteObj.millisecondsToDelete : 0))
+					'data-milliseconds-to-delete': millisecondsToDelete
 				});
 			_set(message, {class: 'Notify_message'});
 				_set(centerButtons, {class: 'Notify_center-buttons'});
