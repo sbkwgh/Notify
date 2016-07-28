@@ -26,36 +26,36 @@ html, body {
 }
 
 #Notify_notify-bar-top-left {
+	max-height: 100%;
 	position: fixed;
 	overflow: auto;
-	left: 1em;
-	width: 15em;
+	left: 0.5em;
+	width: 15.5em;
 	top: 0;
-	padding-top: 1em;
 }
 #Notify_notify-bar-top-right {
+	max-height: 100%;
 	position: fixed;
 	overflow: auto;
-	right: 1em;
-	width: 15em;
+	right: 0em;
+	width: 15.5em;
 	top: 0;
-	padding-top: 1em;
 }
 #Notify_notify-bar-bottom-right {
+	max-height: 100%;
 	position: fixed;
 	overflow: auto;
-	right: 1em;
-	width: 15em;
+	right: 0em;
+	width: 15.5em;
 	bottom: 0;
-	padding-bottom: 1em;
 }
 #Notify_notify-bar-bottom-left {
+	max-height: 100%;
 	position: fixed;
 	overflow: auto;
-	left: 1em;
-	width: 15em;
+	left: 0.5em;
+	width: 15.5em;
 	bottom: 0;
-	padding-bottom: 1em;
 }
 .Notify_sub-div {
 	display: inline-block;
@@ -93,6 +93,7 @@ html, body {
 	right: 0;
 	margin: 2em auto;
 }
+
 
 .Notify {
 	color: #fff;
