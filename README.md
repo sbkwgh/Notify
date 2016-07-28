@@ -41,6 +41,8 @@ Usage:
  - The default setting for the title is no title
  - The default location is top-right, other options:
 ![Location options](http://i.imgur.com/Ak6XFRK.png)
+
+ - N.b. top-center, center and bottom-center will be stacked one on top of another, instead of tiling like other locations
     
 ###Notify.prompt(objectParam)
 Displays a notification with an input box and two buttons ([prompt example](http://jsbin.com/kekami/1/))
@@ -59,7 +61,7 @@ Usage:
     }
     
 
-   - If buttonOne or buttonTwo are left blank or not given, the button will no display
+   - If buttonOne or buttonTwo are left blank or not given, the button will not display
 
 ###Notify.confirm(objectParam)
 Displays a notification with two buttons ([confirm example](http://jsbin.com/gofere/1/))
@@ -78,7 +80,7 @@ Usage:
     }
     
 
-   - If buttonOne or buttonTwo are left blank or not given, the button will no display
+   - If buttonOne or buttonTwo are left blank or not given, the button will not display
 
 ###NotifyElement.on(eventName, callback)
 All the above methods (`notify`, `prompt`, and `confirm`) return the notify element itself. By calling `on` you can call functions when a user interacts with the notification. The method returns itself for method chaining.
